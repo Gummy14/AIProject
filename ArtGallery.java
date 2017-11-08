@@ -14,7 +14,7 @@ import java.awt.Polygon;
 public class ArtGallery extends JPanel implements ActionListener{
 	String x;
 	String y;
-	int test = 11;
+	int test = 18;
 	
 	double distance = 0;
 	double midx = 0;
@@ -132,7 +132,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 					{
 						//used for non-right angles
 						getMid(setx[test-1],sety[test-1], setx[test+1],sety[test+1]);
-						g.drawLine((((int)setx[test])), (((int)sety[test])), (((int)midx)),(((int)midy)));
+						//g.drawLine((((int)setx[test])), (((int)sety[test])), (((int)midx)),(((int)midy)));
 						
 						//for exterior acute angles
 						//jutting out of the museum
@@ -266,21 +266,11 @@ public class ArtGallery extends JPanel implements ActionListener{
 							{
 								if(midx>xtest && midy>ytest)
 								{
-									/*while(Math.abs(midx-xtest)>2 || Math.abs(midy-ytest)>2)
+									while(Math.abs(midx-xtest)>2 || Math.abs(midy-ytest)>2)
 									{
 									while(true)
 									{
-										if(p.contains(midx-1, midy) == false)
-										{
-											midx=midx-1;
-										}
-										else
-										{
-											break;
-										}
-
-									}
-										if(p.contains(midx, midy-1)  == false)
+										if(p.contains(midx, midy-1) == false)
 										{
 											midy=midy-1;
 										}
@@ -290,9 +280,18 @@ public class ArtGallery extends JPanel implements ActionListener{
 										}
 
 									}
-									midx=midx-3;
+										if(p.contains(midx-1, midy)  == false)
+										{
+											midx=midx-1;
+										}
+										else
+										{
+											break;
+										}
+
+									}
+									//midx=midx-3;
 									midy=midy-3;
-									*/
 								}
 								else if(midx>xtest && midy<ytest)
 								{
@@ -320,17 +319,27 @@ public class ArtGallery extends JPanel implements ActionListener{
 										}
 
 									}
-									midx=midx-3;
-									midy=midy+3;
+									midx=midx-9;
+									midy=midy+5;
 									
 								}
 								else if(midx<xtest && midy<ytest)
 								{									
 									while(Math.abs(midx-xtest)>2 || Math.abs(midy-ytest)>2)
 									{
-									//while(true)
-									//{
-										if(p.contains(midx+1, midy) == false)
+									while(true)
+									{
+										if(p.contains(midx, midy+1) == false)
+										{
+											midy=midy+1;
+										}
+										else
+										{
+											break;
+										}
+
+									}
+										if(p.contains(midx+1, midy)  == false)
 										{
 											midx=midx+1;
 										}
@@ -339,23 +348,10 @@ public class ArtGallery extends JPanel implements ActionListener{
 											break;
 										}
 
-									//}
-										if(p.contains(midx, midy+1)  == false)
-										{
-											midy=midy+1;
-										}
-										else
-										{
-											break;
-										}
-										g.drawLine((((int)setx[test])), (((int)sety[test])), (((int)midx)),(((int)midy)));
-
-
 									}
 									
-									midx=midx+3;
-									midy=midy+3;
-									g.drawLine((((int)setx[test])), (((int)sety[test])), (((int)midx)),(((int)midy)));
+									midx=midx+2;
+									midy=midy+5;
 									
 								}
 								else if(midx<xtest && midy>ytest)
