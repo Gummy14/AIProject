@@ -54,7 +54,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		}
 		BReader.close();
 		opnfile.close();	
-	}		// end readFile	
+	}		// end readFile
 
 	public double getDistance(double x1, double y1, double x2, double y2)
 	{
@@ -110,21 +110,24 @@ public class ArtGallery extends JPanel implements ActionListener{
 		g.drawPolygon(p);
 		//g.fillPolygon(p);
 		g.setColor(Color.RED);
+		drawLines(g, p, test);
+	}
+	public void drawLines(Graphics g, Polygon p, int index) {
 		ang = 0;
 		while(ang <=360)
 		{
 			length=1;
-			endx = setx[test] + length*Math.cos(ang);
-			endy = sety[test] + length*Math.sin(ang);
-			while(p.contains(endx,endy) == true)
+			endx = setx[index] + length*Math.cos(ang); // endx, endy is final point on line
+			endy = sety[index] + length*Math.sin(ang); // while setx and y are the vertex it starts
+			while(p.contains(endx,endy) == true) // while the end point is still inside the polygon
 			{
 				length++;
-				endx = setx[test] + length*Math.cos(ang);
-				endy = sety[test] + length*Math.sin(ang);
+				endx = setx[index] + length*Math.cos(ang); // add distance to the line
+				endy = sety[index] + length*Math.sin(ang);
 			}
-			g.drawLine((int)setx[test], (int)sety[test], (int)endx, (int)endy);
-			ang=ang+.001;
-
+			g.drawLine((int)setx[index], (int)sety[index], (int)endx, (int)endy);
+			//ang=ang+.001;
+			ang++;
 		}
 	}
 	public static void main(String[] args) throws IOException
