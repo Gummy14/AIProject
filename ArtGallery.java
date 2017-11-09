@@ -59,7 +59,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 				//System.out.println("Vertex #"+(linecount+1)+" ("+x+", "+y+")");
 				setx[linecount] = Integer.parseInt(x);
 				sety[linecount] = Integer.parseInt(y);
-				System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
+				//System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
 				linecount++;
 		}
 		BReader.close();
@@ -83,31 +83,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		//count  = 0;
 		double xtest = setx[test]*5;
 		double ytest = sety[test]*5;
-		//Every vertex can see the other two it's connected to
-		//get the next one
-		/*if(test != 25)
-		{
-			sightx[0] = setx[test+1];
-			sighty[0] = sety[test+1];
-		}
-		else if(test == 25)
-		{
-			sightx[0] = setx[0];
-			sighty[0] = sety[0];
-		}
-		//get the previous one
-		if(test != 0)
-		{
-			sightx[1] = setx[test-1];
-			sighty[1] = sety[test-1];
-			
-		}
-		else if(test == 0)
-		{
-			sightx[1] = setx[25];
-			sighty[1] = sety[25];
-		}
-		count=2;*/
+
 		super.paintComponent(g);
 		for(int i = 0; i<setx.length;i++)
 		{
@@ -146,10 +122,6 @@ public class ArtGallery extends JPanel implements ActionListener{
 			//g.drawLine(setx[index], sety[index], xpoly[ang], ypoly[ang]);
 			//Math.toDegrees(ang);
 			ang++;
-		}
-		for(int i = 0; i<=360;i++)
-		{
-			System.out.print("("+xpoly[i]+","+ypoly[i]+") ");
 		}
 	}
 	public static void main(String[] args) throws IOException
