@@ -18,12 +18,22 @@ public class ArtGallery extends JPanel implements ActionListener{
 	int test = 23;
 	
 	double distance = 0;
-	double ang = 0;
+	int ang = 0;
 	double slope = 0;
 	double midx = 0;
 	double midy = 0;
+	double dist = 10000;
 	int size = 26;
 	int count = 0;
+	int xpoly[] = new int[361];
+	int ypoly[] = new int[361];
+	
+	int newxpoly[] = new int[361];
+	int newypoly[] = new int[361];
+	
+	double shortest = 10000;
+	int shortspot = 0;
+	
 	int setx[] = new int[size];
 	int sety[] = new int[size];
 	double endx = 0;
@@ -109,25 +119,37 @@ public class ArtGallery extends JPanel implements ActionListener{
 		p = new Polygon(setx, sety, size);
 		g.drawPolygon(p);
 		//g.fillPolygon(p);
-		g.setColor(Color.RED);
+		//g.setColor(Color.RED);
 		drawLines(g, p, test);
+		g.setColor(Color.GREEN);
+		p = new Polygon(xpoly, ypoly, 361);
+		g.drawPolygon(p);
+		
 	}
 	public void drawLines(Graphics g, Polygon p, int index) {
 		ang = 0;
+		
 		while(ang <=360)
 		{
-			length=1;
-			endx = setx[index] + length*Math.cos(ang); // endx, endy is final point on line
-			endy = sety[index] + length*Math.sin(ang); // while setx and y are the vertex it starts
+			length=0;
+			endx = setx[index] + length*Math.cos(Math.toRadians(ang)); // endx, endy is final point on line
+			endy = sety[index] + length*Math.sin(Math.toRadians(ang)); // while setx and y are the vertex it starts
 			while(p.contains(endx,endy) == true) // while the end point is still inside the polygon
 			{
 				length++;
-				endx = setx[index] + length*Math.cos(ang); // add distance to the line
-				endy = sety[index] + length*Math.sin(ang);
+				endx = setx[index] + length*Math.cos(Math.toRadians(ang)); // add distance to the line
+				endy = sety[index] + length*Math.sin(Math.toRadians(ang));
 			}
-			g.drawLine((int)setx[index], (int)sety[index], (int)endx, (int)endy);
-			//ang=ang+.001;
+			//System.out.println("hello");
+			xpoly[ang] = (int) endx;
+			ypoly[ang] = (int) endy;
+			//g.drawLine(setx[index], sety[index], xpoly[ang], ypoly[ang]);
+			//Math.toDegrees(ang);
 			ang++;
+		}
+		for(int i = 0; i<=360;i++)
+		{
+			System.out.print("("+xpoly[i]+","+ypoly[i]+") ");
 		}
 	}
 	public static void main(String[] args) throws IOException
