@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import java.awt.Polygon;
 
 public class ArtGallery extends JPanel implements ActionListener{
+
 	String x;
 	String y;
 	int test = 23;
@@ -28,6 +29,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 	double endx = 0;
 	double endy = 0;
 	double length = 1;
+
 	int sightx[] = new int[size];
 	int sighty[] = new int[size];
 	Polygon p;
@@ -47,22 +49,25 @@ public class ArtGallery extends JPanel implements ActionListener{
 				//System.out.println("Vertex #"+(linecount+1)+" ("+x+", "+y+")");
 				setx[linecount] = Integer.parseInt(x);
 				sety[linecount] = Integer.parseInt(y);
-				System.out.println("Vertex #"+(linecount)+" ("+setx[linecount]+", "+sety[linecount]+")");
+				System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
 				linecount++;
 		}
 		BReader.close();
 		opnfile.close();	
-	}
+	}		// end readFile	
+
 	public double getDistance(double x1, double y1, double x2, double y2)
 	{
-		distance = Math.sqrt(((x2 - x1)*(x2- x1))+((y2 - y1)*(y2 - y1)));
+		distance = Math.sqrt(((x2 - x1)*(x2 - x1))+((y2 - y1)*(y2 - y1)));
 		return distance;
 	}
+
 	public void getMid(int x1, int y1, int x2, int y2)
 	{
 		midx = (x1+x2)/2;
 		midy = (y1+y2)/2;
 	}
+
 	public void paintComponent(Graphics g) 
 	{	
 		//count  = 0;
@@ -96,7 +101,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		super.paintComponent(g);
 		for(int i = 0; i<setx.length;i++)
 		{
-			setx[i] = setx[i]*5;
+			setx[i] = setx[i]*5;	// make 5 times larger
 			sety[i] = sety[i]*5;
 			g.setColor(Color.BLACK);
 			g.fillOval(((int)setx[i])-5,((int)sety[i])-5, 10, 10);
@@ -119,6 +124,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 			}
 			g.drawLine((int)setx[test], (int)sety[test], (int)endx, (int)endy);
 			ang=ang+.001;
+
 		}
 	}
 	public static void main(String[] args) throws IOException
