@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import java.awt.Polygon;
 
 public class ArtGallery extends JPanel implements ActionListener{
+	//Variables
 	String x;
 	String y;
 	int test = 18;
@@ -27,6 +28,8 @@ public class ArtGallery extends JPanel implements ActionListener{
 	int sighty[] = new int[size];
 	Polygon p;
 	boolean intersect = false;
+	
+	//Reads in the stuff from the gallery file
 	public void readFile() throws IOException
 	{
 		FileReader opnfile = new FileReader("Gallery.txt");
@@ -63,6 +66,8 @@ public class ArtGallery extends JPanel implements ActionListener{
 		//count  = 0;
 		double xtest = setx[test]*5;
 		double ytest = sety[test]*5;
+		
+		//This code segment is currently in time-out
 		//Every vertex can see the other two it's connected to
 		//get the next one
 		/*if(test != 25)
@@ -88,7 +93,9 @@ public class ArtGallery extends JPanel implements ActionListener{
 			sighty[1] = sety[25];
 		}
 		count=2;*/
+		
 		super.paintComponent(g);
+		//draw all the vertecies
 		for(int i = 0; i<setx.length;i++)
 		{
 			setx[i] = setx[i]*5;
@@ -111,6 +118,8 @@ public class ArtGallery extends JPanel implements ActionListener{
 			{
 				if(h != i && h+1 != i)
 				{
+					//The intersection function i found wasn't working exactly how i wanted it to so this code adjusts for that
+					
 					//for right angles
 					if(p.contains(xtest+1, ytest-1) == false && p.contains(xtest-1, ytest+1) == true)
 					{
@@ -131,6 +140,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 					else
 					{
 						//used for non-right angles
+						//basically it takes the mid point and uses that to place the point
 						getMid(setx[test-1],sety[test-1], setx[test+1],sety[test+1]);
 						//g.drawLine((((int)setx[test])), (((int)sety[test])), (((int)midx)),(((int)midy)));
 						
@@ -261,7 +271,6 @@ public class ArtGallery extends JPanel implements ActionListener{
 						else
 						{
 							//for interior acute angles
-							//not done yet
 							if(i != test-1 || i != test+1)
 							{
 								if(midx>xtest && midy>ytest)
