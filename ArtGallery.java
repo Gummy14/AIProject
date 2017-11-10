@@ -65,10 +65,6 @@ public class ArtGallery extends JPanel implements ActionListener{
 				setY[lineCount] = Integer.parseInt(y);
 				//System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
 				lineCount++;
-				setX[lineCount] = Integer.parseInt(x);
-				setY[lineCount] = Integer.parseInt(y);
-				//System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
-				lineCount++;
 		}
 		BReader.close();
 		opnfile.close();	
