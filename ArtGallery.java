@@ -65,6 +65,10 @@ public class ArtGallery extends JPanel implements ActionListener{
 				setY[lineCount] = Integer.parseInt(y);
 				//System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
 				lineCount++;
+				setX[lineCount] = Integer.parseInt(x);
+				setY[lineCount] = Integer.parseInt(y);
+				//System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
+				lineCount++;
 		}
 		BReader.close();
 		opnfile.close();	
@@ -89,6 +93,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 	{	
 		Polygon newPolygon;
 		int ScalingConstant = 2;
+		//count  = 0;
 		super.paintComponent(g);
 		for(int i = 0; i< BuildingVertices.size();i++)
 		{
@@ -134,10 +139,6 @@ public class ArtGallery extends JPanel implements ActionListener{
 			g.drawLine(setX[index], setY[index], xpoly[ang], ypoly[ang]);
 			//Math.toDegrees(ang);
 			ang++;
-		}
-		for(int i = 0; i<=360;i++)
-		{
-			System.out.print("("+xpoly[i]+","+ypoly[i]+") ");
 		}
 	}
 	public static void main(String[] args) throws IOException
