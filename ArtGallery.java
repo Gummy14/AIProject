@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import java.awt.Polygon;
 import java.util.Random;
 
-public class ArtGallery extends JPanel implements ActionListener{
+public class ArtGallery extends JPanel implements ActionListener {
 
 //******************
 //Class Properties
@@ -34,6 +34,19 @@ public class ArtGallery extends JPanel implements ActionListener{
 		private Polygon MuseumOutline;
 		private int[] setX = new int[size];
 		private int[] setY = new int[size];
+		
+		public ArrayList<MuseumVertex> getBuildingVertices()
+		{
+			return BuildingVertices;
+		}
+		public ArrayList<Polygon> getPolygonList()
+		{
+			return PolygonList;
+		}
+		public Polygon getMuseumOutline()
+		{
+			return MuseumOutline;
+		}
 
 		private boolean intersect = false;
 
@@ -167,7 +180,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 				endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang)); // while setx and y are the vertex it starts
 				while(polygon.contains(endX,endY) == true) // while the end point is still inside the polygon
 				{
-					length++;
+					length=length+3;
 					endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // add distance to the line
 					endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang));
 				}
@@ -180,19 +193,6 @@ public class ArtGallery extends JPanel implements ActionListener{
 				cameraVision = new Polygon(polyX, polyY, 361);
 				PolygonList.add(cameraVision);
 		}
-	}
-	public static void main(String[] args) throws IOException
-	{
-		ArtGallery artGallery = new ArtGallery(6);
-		artGallery.IsSecure();
-		JFrame mainWindow = new JFrame();
-		mainWindow.add(artGallery);
-		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setTitle("Art Gallery");
-		//mainWindow.setBackground(Color.WHITE);
-		mainWindow.setSize(1000, 1000);
-		mainWindow.setVisible(true);
-
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -231,25 +231,6 @@ public class ArtGallery extends JPanel implements ActionListener{
 		return allCamerasVisible;
 	}//end function
 	
-	private class MuseumVertex{
-		private boolean isVisible;
-		int xValue;
-		int yValue;
-		public MuseumVertex(int x, int y)
-		{
-			xValue = x;
-			yValue = y;
-			
-		}
-		public void    setVisibility(boolean visibility) {isVisible = visibility;}
-		public boolean getVisibility() {return isVisible;}
-		public int getX() {return xValue;}
-		public int getY() {return yValue;}
-		public void setX(int x) {xValue = x;}
-		public void setY(int y) {yValue = y;}
-
-	}
-	
 //Never Used functions and ETC********************************************
 	
 	public double getDistance(double x1, double y1, double x2, double y2)
@@ -264,8 +245,3 @@ public class ArtGallery extends JPanel implements ActionListener{
 		//midy = (y1+y2)/2;
 	}
 }
-
-
-
-
-	
