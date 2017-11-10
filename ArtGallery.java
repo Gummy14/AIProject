@@ -25,12 +25,12 @@ public class ArtGallery extends JPanel implements ActionListener{
 		//private int size       =  rand.nextInt(50) + 1;
 		private int size;
 		private int[] cameras;
-		private int[] xpoly      = new int[361];
-		private int[] ypoly      = new int[361];		
+		private int[] polyX      = new int[361];
+		private int[] polyY      = new int[361];		
 		//This list contains all the museum building vertices
-		ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
+		private ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
 		//This arrayList will contain all the polygons that are formed by the camera's viewpoints
-		ArrayList<Polygon> PolygonList = new ArrayList<Polygon>();
+		private ArrayList<Polygon> PolygonList = new ArrayList<Polygon>();
 		private Polygon MuseumOutline;
 		private int[] setX = new int[size];
 		private int[] setY = new int[size];
@@ -40,15 +40,60 @@ public class ArtGallery extends JPanel implements ActionListener{
 //******************
 //Class Constructors
 //******************
-	public ArtGallery()
+	public ArtGallery(int x) throws IOException
 	{
+		//Reads file to generate the vertices
 		size = 26;
-		cameras = new int[1];
-		cameras[0] = 2;
-		//cameras[1] = 5;
-		//cameras[2] = 11;
 		setX = new int[size];
 		setY = new int[size];
+		this.readFile();
+
+		cameras = new int[26];
+		for(int i = 0; i < cameras.length; i++)
+			cameras[i] = i+1;
+		
+		int ScalingConstant = 5;
+		for(int i = 0; i< BuildingVertices.size();i++)
+		{
+			//Scale the building to meet the screen needs
+			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
+			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
+			setY[i] = setY[i]*ScalingConstant;
+			setX[i] = setX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
+		}
+		MuseumOutline = new Polygon(setX, setY, size);
+		
+		createPolygons( MuseumOutline, cameras, setX, setY);
+	}
+	
+	
+	public ArtGallery() throws IOException
+	{
+		//Reads file to generate the vertices
+		//Random rand = new 
+		size = 26;
+		setX = new int[size];
+		setY = new int[size];
+		this.readFile();
+
+		cameras = new int[26];
+		for(int i = 0; i < cameras.length; i++)
+			cameras[i] = i+1;
+		
+		int ScalingConstant = 5;
+		for(int i = 0; i< BuildingVertices.size();i++)
+		{
+			//Scale the building to meet the screen needs
+			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
+			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
+			setY[i] = setY[i]*ScalingConstant;
+			setX[i] = setX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
+		}
+		MuseumOutline = new Polygon(setX, setY, size);
+		
+		createPolygons( MuseumOutline, cameras, setX, setY);
 	}
 	
 //******************
@@ -64,13 +109,10 @@ public class ArtGallery extends JPanel implements ActionListener{
 		{
 			String x = crd.substring(0,3);
 			String y = crd.substring(6);
-			
-				//System.out.println("Vertex #"+(linecount+1)+" ("+x+", "+y+")");
-				this.BuildingVertices.add(new MuseumVertex((Integer.parseInt(x)), (Integer.parseInt(y))));
-				setX[lineCount] = Integer.parseInt(x);
-				setY[lineCount] = Integer.parseInt(y);
-				//System.out.println("Vertex #" + (linecount) + " (" + setx[linecount] + ", " + sety[linecount] + ")");
-				lineCount++;
+			this.BuildingVertices.add(new MuseumVertex((Integer.parseInt(x)), (Integer.parseInt(y))));
+			setX[lineCount] = Integer.parseInt(x);
+			setY[lineCount] = Integer.parseInt(y);
+			lineCount++;
 		}
 		BReader.close();
 		opnfile.close();	
@@ -91,45 +133,34 @@ public class ArtGallery extends JPanel implements ActionListener{
 		} 
 	}
 //***********************************************
-//Draws the museum polygon
+//Draws the museum polygon and all the inner polygons representing each camera's vision
 //***********************************************
 	public void paintComponent(Graphics g) 
 	{	
-
-		int ScalingConstant = 2;
 		//count  = 0;
 		super.paintComponent(g);
 		for(int i = 0; i< BuildingVertices.size();i++)
 		{
-			//Scale the building to meet the screen needs
-			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
-			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
-			setY[i] = setY[i]*ScalingConstant;
-			setX[i] = setX[i]*ScalingConstant;
+			//Draws the building vertices
 			g.setColor(Color.BLACK);
-			
 			g.fillOval(((int)BuildingVertices.get(i).getX())-5,((int)BuildingVertices.get(i).getY()-5), 10, 10);
-			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
-			}
-		MuseumOutline = new Polygon(setX, setY, size);
+		}
+		g.setColor(Color.BLACK);
 		g.drawPolygon(MuseumOutline);
-		
-		
-		createPolygons(g, MuseumOutline, cameras, setX, setY);
 		g.setColor(Color.GREEN);
-
 		for(int i = 0; i < PolygonList.size(); i++)
 			g.drawPolygon(PolygonList.get(i));
 		
 	}
-	public void createPolygons(Graphics g, Polygon polygon, int[] cameras, int[] setX, int[] SetY) {
+	public void createPolygons(Polygon polygon, int[] cameras, int[] setX, int[] SetY) {
 		
 		for(int currentCamera = 0; currentCamera < cameras.length; currentCamera++)
 		{
 			int ang = 0;
+			
 			while(ang <=360)
 			{
-				double length=1;
+				double length=3;
 				double 	endX,endY = 0;
 				
 				endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // endx, endy is final point on line
@@ -140,29 +171,28 @@ public class ArtGallery extends JPanel implements ActionListener{
 					endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // add distance to the line
 					endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang));
 				}
-				xpoly[ang] = (int) endX;
-				ypoly[ang] = (int) endY;
-				g.drawLine(setX[currentCamera], setY[currentCamera], xpoly[ang], ypoly[ang]);
-				//Math.toDegrees(ang);
+				polyX[ang] =  (int)endX;
+				polyY[ang] =  (int)endY;
 				ang++;
 			 }
 				
 				Polygon cameraVision;
-				cameraVision = new Polygon(xpoly, ypoly, 361);
+				cameraVision = new Polygon(polyX, polyY, 361);
 				PolygonList.add(cameraVision);
 		}
 	}
 	public static void main(String[] args) throws IOException
 	{
-		ArtGallery artGallery = new ArtGallery();
-		artGallery.readFile();
+		ArtGallery artGallery = new ArtGallery(6);
+		artGallery.IsSecure();
 		JFrame mainWindow = new JFrame();
 		mainWindow.add(artGallery);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setSize(1000, 1000);
 		mainWindow.setTitle("Art Gallery");
-		mainWindow.setBackground(Color.WHITE);
+		//mainWindow.setBackground(Color.WHITE);
+		mainWindow.setSize(1000, 1000);
 		mainWindow.setVisible(true);
+
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
