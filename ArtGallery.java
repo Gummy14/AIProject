@@ -97,7 +97,13 @@ public class ArtGallery extends JPanel implements ActionListener{
 		
 		createPolygons( MuseumOutline, cameras, setX, setY);
 	}
-	
+//******************
+//Setters And Getters
+//******************	
+public int[] getCameras()
+{
+	return cameras;
+}	
 //******************
 //Class Methods
 //******************
@@ -166,14 +172,14 @@ public class ArtGallery extends JPanel implements ActionListener{
 		
 		while(ang <=360)
 		{
-			double length=3;
+			double length=5;
 			double 	endX,endY = 0;
 			
 			endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // endx, endy is final point on line
 			endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang)); // while setx and y are the vertex it starts
 			while(polygon.contains(endX,endY) == true) // while the end point is still inside the polygon
 			{
-				length++;
+				length=length+5;
 				endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // add distance to the line
 				endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang));
 			}
