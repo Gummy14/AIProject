@@ -94,16 +94,18 @@ public class ArtGallery extends JPanel implements ActionListener{
 			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
 		}
 		MuseumOutline = new Polygon(setX, setY, size);
-		
-		createPolygons( MuseumOutline, cameras, setX, setY);
+		findSecureSolution(cameras);
+		//createPolygons( MuseumOutline, cameras, setX, setY);
 	}
+	
 //******************
 //Setters And Getters
 //******************	
 public int[] getCameras()
 {
 	return cameras;
-}	
+}
+
 //******************
 //Class Methods
 //******************
@@ -192,7 +194,7 @@ public int[] getCameras()
 			PolygonList.add(cameraVision);
 	}
 
-	public static void main(String[] args) throws IOException
+	/*public static void main(String[] args) throws IOException
 	{
 		ArtGallery artGallery = new ArtGallery(6);
 		artGallery.isSecure();
@@ -204,7 +206,7 @@ public int[] getCameras()
 		mainWindow.setSize(1000, 1000);
 		mainWindow.setVisible(true);
 
-	}
+	}*/
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub	
@@ -292,8 +294,3 @@ public int[] getCameras()
 		//midy = (y1+y2)/2;
 	}
 }
-
-
-
-
-	
