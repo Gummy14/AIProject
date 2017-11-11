@@ -244,13 +244,13 @@ public class ArtGallery extends JPanel implements ActionListener{
 			Random rand = new Random();
 			if (cams.size() == 0) break;
 			int index = rand.nextInt(cams.size());
-			createPolygon(MuseumOutline, cameras[index], setX, setY);
+			createPolygon(MuseumOutline, cams.get(index)-1, setX, setY);
 			cams.remove(index);
 			boolean secure = this.isSecure();
-			System.out.println(secure);
+			count++;
 			if (secure) break;
 		}
-
+		System.out.println(count);
 	}
 	
 	private class MuseumVertex {
