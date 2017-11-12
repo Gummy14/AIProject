@@ -7,10 +7,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Polygon;
 import java.util.Random;
+import java.util.Arrays;
 
 public class ArtGallery{
 
@@ -25,7 +27,7 @@ public class ArtGallery{
 		private int size;
 		private int[] cameras;
 		private int[] polyX      = new int[361];
-		private int[] polyY      = new int[361];		
+		private int[] polyY      = new int[361];
 		//This list contains all the museum building vertices
 		public ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
 		//This arrayList will contain all the polygons that are formed by the camera's viewpoints
@@ -60,8 +62,8 @@ public class ArtGallery{
 			setX[i] = setX[i]*ScalingConstant;
 		}
 		MuseumOutline = new Polygon(setX, setY, size);
-		
-		createPolygons( MuseumOutline, cameras, setX, setY);
+		findSecureSolution(cameras);
+		//createPolygons( MuseumOutline, cameras, setX, setY);
 	}
 	
 	
@@ -79,7 +81,7 @@ public class ArtGallery{
 			cameras[i] = i+1;
 		
 		int ScalingConstant = 5;
-		for(int i = 0; i< BuildingVertices.size();i++)
+		for(int i = 0; i < BuildingVertices.size(); i++)
 		{
 			//Scale the building to meet the screen needs
 			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
@@ -88,10 +90,18 @@ public class ArtGallery{
 			setX[i] = setX[i]*ScalingConstant;
 		}
 		MuseumOutline = new Polygon(setX, setY, size);
-		
-		createPolygons( MuseumOutline, cameras, setX, setY);
+		findSecureSolution(cameras);
+		//createPolygons( MuseumOutline, cameras, setX, setY);
 	}
 	
+//******************
+//Setters And Getters
+//******************	
+public int[] getCameras()
+{
+	return cameras;
+}
+
 //******************
 //Class Methods
 //******************
@@ -143,7 +153,7 @@ public class ArtGallery{
 		}
 		g.setColor(Color.BLACK);
 		g.drawPolygon(MuseumOutline);
-		g.setColor(Color.GREEN);
+		g.setColor(Color.MAGENTA);
 		for(int i = 0; i < PolygonList.size(); i++)
 			g.drawPolygon(PolygonList.get(i));
 		
@@ -153,32 +163,35 @@ public class ArtGallery{
 		
 		for(int currentCamera = 0; currentCamera < cameras.length; currentCamera++)
 		{
-			int ang = 0;
-			
-			while(ang <=360)
-			{
-				double length=3;
-				double 	endX,endY = 0;
-				
-				endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // endx, endy is final point on line
-				endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang)); // while setx and y are the vertex it starts
-				while(polygon.contains(endX,endY) == true) // while the end point is still inside the polygon
-				{
-					length++;
-					endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // add distance to the line
-					endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang));
-				}
-				polyX[ang] =  (int)endX;
-				polyY[ang] =  (int)endY;
-				ang++;
-			 }
-				
-				Polygon cameraVision;
-				cameraVision = new Polygon(polyX, polyY, 361);
-				PolygonList.add(cameraVision);
+			createPolygon(polygon, currentCamera, setX, setY);
 		}
 	}
-	public static void main(String[] args) throws IOException
+	public void createPolygon(Polygon polygon, int currentCamera, int[] setX, int[] SetY) {
+		int ang = 0;
+		
+		while(ang <=360)
+		{
+			double length=5;
+			double 	endX,endY = 0;
+			
+			endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // endx, endy is final point on line
+			endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang)); // while setx and y are the vertex it starts
+			while(polygon.contains(endX,endY) == true) // while the end point is still inside the polygon
+			{
+				length=length+5;
+				endX = setX[currentCamera] + length*Math.cos(Math.toRadians(ang)); // add distance to the line
+				endY = setY[currentCamera] + length*Math.sin(Math.toRadians(ang));
+			}
+			polyX[ang] =  (int)endX;
+			polyY[ang] =  (int)endY;
+			ang++;
+		}	
+			Polygon cameraVision;
+			cameraVision = new Polygon(polyX, polyY, 361);
+			PolygonList.add(cameraVision);
+	}
+
+	/*public static void main(String[] args) throws IOException
 	{
 		ArtGallery artGallery = new ArtGallery(6);
 		artGallery.isSecure();
@@ -190,9 +203,15 @@ public class ArtGallery{
 		mainWindow.setSize(1000, 1000);
 		mainWindow.setVisible(true);
 
+<<<<<<< HEAD
 	}
 	//@Override
 	//public void actionPerformed(ActionEvent arg0) {
+=======
+	}*/
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+>>>>>>> 6965748739d3ef3dc56f83a39c4b545c99f8c642
 		// TODO Auto-generated method stub	
 	//}
 	
@@ -205,7 +224,7 @@ public class ArtGallery{
 	{
 		//This boolean keeps track of weather or not all of the museum corners have been spotted or not
 		boolean cameraVisible = false;
-		boolean allCamerasVisible    = true;
+		boolean allCamerasVisible = true;
 
 			for(int i = 0; i < BuildingVertices.size(); i++)
 			{
@@ -227,7 +246,25 @@ public class ArtGallery{
 			}//outer loop
 		return allCamerasVisible;
 	}//end function
+
+	public void findSecureSolution(int[] cameras) {
+		List<Integer> cams = new ArrayList<Integer>();
+		for (int i = 0; i < cameras.length; i++) cams.add(cameras[i]);
+		int count = 0;
+		while (true) {
+			Random rand = new Random();
+			if (cams.size() == 0) break;
+			int index = rand.nextInt(cams.size());
+			createPolygon(MuseumOutline, cams.get(index)-1, setX, setY);
+			cams.remove(index);
+			boolean secure = this.isSecure();
+			count++;
+			if (secure) break;
+		}
+		System.out.println(count);
+	}
 	
+<<<<<<< HEAD
 	public ArrayList<MuseumVertex> getVertices()
 	{
 		return this.BuildingVertices;
@@ -235,6 +272,9 @@ public class ArtGallery{
 	
 	
 	    class MuseumVertex{
+=======
+	private class MuseumVertex {
+>>>>>>> 6965748739d3ef3dc56f83a39c4b545c99f8c642
 		private boolean isVisible;
 		private boolean hasCamera;
 		private int xValue;
@@ -245,7 +285,7 @@ public class ArtGallery{
 			yValue = y;
 			
 		}
-		public void    setVisibility(boolean visibility) {isVisible = visibility;}
+		public void setVisibility(boolean visibility) {isVisible = visibility;}
 		public boolean getVisibility() {return isVisible;}
 		public void    setCamera(boolean hasCamera) {hasCamera = hasCamera;}
 		public boolean getCamera() {return isVisible;}
@@ -270,8 +310,3 @@ public class ArtGallery{
 		//midy = (y1+y2)/2;
 	}
 }
-
-
-
-
-	

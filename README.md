@@ -1,3 +1,8 @@
 # AIProject
-AI Project
-top kek
+Finish the project
+
+get our dicks sucked
+
+become billionaires
+
+die
