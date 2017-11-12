@@ -21,17 +21,53 @@ public class GA extends JPanel implements ActionListener{
 		return population;
 		
 	}
-	public void NaturalSelection() throws IOException
+	public static void NaturalSelection(List<ArtGallery> thePopulation) throws IOException
 	{
-		List<ArtGallery> thePopulation = makeInitialPopulation();
 		int[] parentOne = new int[thePopulation.get(0).getCameras()];
 		int[] parentTwo = new int[thePopulation.get(0).getCameras()];
+		
+		int smallest = thePopulation.get(0).getCameras()+1;//Population member with the smallest number of cameras, initially set to an impossibly large value
+		int smallestFoundAt = 0;
+		int secondSmallest = thePopulation.get(0).getCameras()+1;//Population member with the second smallest number of cameras, initially set to an impossibly large value
+		int secondSmallestFoundAt = 0;
+		
+		//find smallest count, this will be made into parent 1
+		for(int i = 0;i<thePopulation.size();i++)
+		{
+			if(thePopulation.get(i).getCount()< smallest)
+			{
+				smallest = thePopulation.get(i).getCount();
+				smallestFoundAt = i;
+			}
+		}
+		//Make Parent 1
+		for(int j = 0; j<26; j++)
+		{
+			parentOne[j] = thePopulation.get(smallestFoundAt).getCameraPlacement(j);
+		}
+		
+		//find second smallest count, this will be made into parent 2
+		for(int i = 0;i<thePopulation.size();i++)
+		{
+			if(thePopulation.get(i).getCount()< secondSmallest && i != smallestFoundAt)
+			{
+				secondSmallest = thePopulation.get(i).getCount();
+				secondSmallestFoundAt = i;
+			}
+		}
+		//Make Parent 2
+		for(int j = 0; j<26; j++)
+		{
+			parentTwo[j] = thePopulation.get(secondSmallestFoundAt).getCameraPlacement(j);
+		}
+		
+		//CROSSOVER FUNCTION HERE
 	}
 	public static void main(String[] args) throws IOException
 	{
 		List<ArtGallery> thePopulation = makeInitialPopulation();
 		List<JFrame> windows = new ArrayList<JFrame>();
-
+		NaturalSelection(thePopulation);
 		for(int i = 0; i<populationSize; i++)
 		{
 			System.out.print("Population Member #"+i+":");

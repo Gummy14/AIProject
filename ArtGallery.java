@@ -38,6 +38,8 @@ public class ArtGallery extends JPanel implements ActionListener{
 		private int[] setY = new int[size];
 		private int[] cameraPlacementTrackingArray;
 		private boolean intersect = false;
+		
+		private int count = 0;
 
 //******************
 //Class Constructors
@@ -110,6 +112,10 @@ public int getCameras()
 public int getCameraPlacement(int element)
 {
 	return cameraPlacementTrackingArray[element];
+}
+public int getCount()
+{
+	return count;
 }
 //******************
 //Class Methods
@@ -252,7 +258,7 @@ public int getCameraPlacement(int element)
 	public void findSecureSolution(int[] cameras) {
 		List<Integer> cams = new ArrayList<Integer>();//creates an array list for the cameras
 		for (int i = 0; i <cameras.length; i++) cams.add(cameras[i]);//adds the specified number cameras to the arraylist
-		int count = 0;//number of added cameras starts at zero
+		count = 0;//number of added cameras starts at zero
 		while (true) {
 			Random rand = new Random();
 			if (cams.size() == 0) break;//if we have no cameras, just break
