@@ -5,11 +5,11 @@ public class Algorithms {
 	public static ArrayList<ArtGallery> GeneratePopulation(ArrayList<ArtGallery> populationPrototype, int sizePopulation)
 	{
 		int chromosomeLength = populationPrototype.size();
-		ArrayList<ArtGallery> newPopulationMember = new ArrayList<ArtGallery>() ;
+		ArrayList<ArtGallery> newPopulationMember = new ArrayList<ArtGallery>();
 
 		for(int i = 0; i < sizePopulation; i++)
 		{	
-			newPopulationMember = new ArrayList();
+			newPopulationMember = new ArrayList<ArtGallery>();
 			//Create new population member
 			for(int count = 0; count < sizePopulation; count++)
 				newPopulationMember.add(populationPrototype.get(count));
@@ -45,12 +45,12 @@ public class Algorithms {
         	for(int count = 0; count < populationMember.BuildingVertices.size(); count++) {
             
 	        	if (rnd.nextInt(maxMutationInt)+1 <= 1)
-	            {
+	          {
 	                //Generates a random gene index to swap with for the mutation
 	        		if(populationMember.getVertices().get(count).getCamera() == true)
 	        			populationMember.getVertices().get(count).setCamera(false);
 	        		else {populationMember.getVertices().get(count).setCamera(true);}  
-	            }
+	          }
         	}
 		return populationMember;	
 	}

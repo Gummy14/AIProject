@@ -14,7 +14,7 @@ import java.awt.Polygon;
 import java.util.Random;
 import java.util.Arrays;
 
-public class ArtGallery{
+public class ArtGallery {
 
 //******************
 //Class Properties
@@ -203,15 +203,9 @@ public int[] getCameras()
 		mainWindow.setSize(1000, 1000);
 		mainWindow.setVisible(true);
 
-<<<<<<< HEAD
-	}
+	}*/
 	//@Override
 	//public void actionPerformed(ActionEvent arg0) {
-=======
-	}*/
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
->>>>>>> 6965748739d3ef3dc56f83a39c4b545c99f8c642
 		// TODO Auto-generated method stub	
 	//}
 	
@@ -264,17 +258,14 @@ public int[] getCameras()
 		System.out.println(count);
 	}
 	
-<<<<<<< HEAD
 	public ArrayList<MuseumVertex> getVertices()
 	{
 		return this.BuildingVertices;
 	}
 	
 	
-	    class MuseumVertex{
-=======
-	private class MuseumVertex {
->>>>>>> 6965748739d3ef3dc56f83a39c4b545c99f8c642
+	class MuseumVertex{
+
 		private boolean isVisible;
 		private boolean hasCamera;
 		private int xValue;

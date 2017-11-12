@@ -29,11 +29,11 @@ public class GA extends JPanel implements ActionListener{
 		for(int i = 0; i<populationSize; i++)
 		{
 			windows.add(new JFrame());
-			windows.get(i).add(thePopulation.get(i));
+			//windows.get(i).add(thePopulation.get(i));
 			windows.get(i).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			windows.get(i).setTitle("Art Gallery");
 			windows.get(i).setSize(1000, 1000);
-			windows.get(i).setVisible(true);
+			//windows.get(i).setVisible(true);
 		}
 
 	}
