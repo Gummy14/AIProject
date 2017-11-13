@@ -39,7 +39,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		private int[] cameraPlacementTrackingArray;
 		private boolean intersect = false;
 		
-		private int count = 0;
+		private int cameraCount = 0;
 
 //******************
 //Class Constructors
@@ -113,9 +113,9 @@ public int getCameraPlacement(int element)
 {
 	return cameraPlacementTrackingArray[element];
 }
-public int getCount()
+public int getCameraCount()
 {
-	return count;
+	return cameraCount;
 }
 //******************
 //Class Methods
@@ -258,7 +258,7 @@ public int getCount()
 	public void findSecureSolution(int[] cameras) {
 		List<Integer> cams = new ArrayList<Integer>();//creates an array list for the cameras
 		for (int i = 0; i <cameras.length; i++) cams.add(cameras[i]);//adds the specified number cameras to the arraylist
-		count = 0;//number of added cameras starts at zero
+		cameraCount = 0;//number of added cameras starts at zero
 		while (true) {
 			Random rand = new Random();
 			if (cams.size() == 0) break;//if we have no cameras, just break
@@ -271,11 +271,11 @@ public int getCount()
 			createPolygon(MuseumOutline, cams.get(index)-1, setX, setY);//draws the polygon representing that cameras line of sight
 			//cams.remove(index); THIS LINE CAUSED MAJOR PROBLEMS WHEN TRACKING WHICH CAMERAS WHERE PLACED
 			boolean secure = this.isSecure();//checks to see if the entire museum is covered
-			count++;//adds one to the camera count
+			cameraCount++;//adds one to the camera count
 			cameraPlacementTrackingArray[index] = 1;
 			if (secure) break;//if the museum is covered, break, otherwise loop again
 		}
-		System.out.println(count);
+		System.out.println(cameraCount);
 	}
 	
 	private class MuseumVertex {
