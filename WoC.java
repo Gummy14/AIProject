@@ -19,6 +19,7 @@ public class WoC extends JPanel implements ActionListener{
 	private static int size = 26;
 	static ArrayList<GA> Crowd = new ArrayList<GA>();
 	static Polygon MuseumOutline;
+	public static ArrayList<Color> colors = new ArrayList<Color>();
 	private static ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
 	private static ArrayList<Polygon> PolygonList = new ArrayList<Polygon>();
 	private static int[] setofX = new int[size];
@@ -116,9 +117,24 @@ public class WoC extends JPanel implements ActionListener{
 		//count  = 0;
 		super.paintComponent(g);
 		g.drawPolygon(MuseumOutline);
-		g.setColor(Color.MAGENTA);
-		for(int i = 0; i < PolygonList.size(); i++)
+		int colorCount = 0;
+		for(int j = 0;j<WoCSolution.length;j++)
+		{
+			if(WoCSolution[j] == 1)
+			{
+				if (colorCount >= 11) colorCount = 0;
+				colorCount++;
+				g.setColor(colors.get(colorCount));
+				g.fillOval(((int)setofX[j]-5),((int)setofY[j]-5), 10, 10);
+			}
+		}
+		colorCount = 0;
+		for(int i = 0; i < PolygonList.size(); i++) {
+			if (colorCount >= 11) colorCount = 0;
+			colorCount++;
+			g.setColor(colors.get(colorCount));
 			g.drawPolygon(PolygonList.get(i));
+		}
 		
 	}
 	public WoC() throws IOException
@@ -161,6 +177,18 @@ public class WoC extends JPanel implements ActionListener{
 	public static void main(String[] args) throws IOException
 	{
 		WoC woc = new WoC();
+		colors.add(Color.BLUE);
+		colors.add(Color.RED);
+		colors.add(Color.GREEN);
+		colors.add(Color.MAGENTA);
+		colors.add(Color.PINK);
+		colors.add(Color.ORANGE);
+		colors.add(Color.DARK_GRAY);
+		colors.add(Color.LIGHT_GRAY);
+		colors.add(Color.YELLOW);
+		colors.add(Color.CYAN);
+		colors.add(Color.getColor("#663399"));
+		colors.add(Color.getColor("#b29aaa"));
 		System.out.print("\nNumber of Camera used: "+finalCount);
 		JFrame mainWindow = new JFrame();
 		mainWindow.add(woc);
