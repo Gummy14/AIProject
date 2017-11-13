@@ -39,7 +39,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		private int[] cameraPlacementTrackingArray;
 		private boolean intersect = false;
 		
-		private int cameraCount = 0;
+		private int count = 0;
 
 //******************
 //Class Constructors
@@ -105,6 +105,10 @@ public class ArtGallery extends JPanel implements ActionListener{
 //******************
 //Setters And Getters
 //******************	
+public Polygon getMuseumOutline()
+{
+	return MuseumOutline;
+}
 public int getCameras()
 {
 	return cameras.length;
@@ -113,9 +117,21 @@ public int getCameraPlacement(int element)
 {
 	return cameraPlacementTrackingArray[element];
 }
-public int getCameraCount()
+public int getCount()
 {
-	return cameraCount;
+	return count;
+}
+public int[] getSetX()
+{
+	return setX;
+}
+public int[] getSetY()
+{
+	return setY;
+}
+public ArrayList<MuseumVertex> getBuildingVertices()
+{
+	return BuildingVertices;
 }
 //******************
 //Class Methods
@@ -258,7 +274,7 @@ public int getCameraCount()
 	public void findSecureSolution(int[] cameras) {
 		List<Integer> cams = new ArrayList<Integer>();//creates an array list for the cameras
 		for (int i = 0; i <cameras.length; i++) cams.add(cameras[i]);//adds the specified number cameras to the arraylist
-		cameraCount = 0;//number of added cameras starts at zero
+		count = 0;//number of added cameras starts at zero
 		while (true) {
 			Random rand = new Random();
 			if (cams.size() == 0) break;//if we have no cameras, just break
@@ -271,31 +287,17 @@ public int getCameraCount()
 			createPolygon(MuseumOutline, cams.get(index)-1, setX, setY);//draws the polygon representing that cameras line of sight
 			//cams.remove(index); THIS LINE CAUSED MAJOR PROBLEMS WHEN TRACKING WHICH CAMERAS WHERE PLACED
 			boolean secure = this.isSecure();//checks to see if the entire museum is covered
-			cameraCount++;//adds one to the camera count
+			count++;//adds one to the camera count
 			cameraPlacementTrackingArray[index] = 1;
 			if (secure) break;//if the museum is covered, break, otherwise loop again
 		}
-		System.out.println(cameraCount);
+		System.out.println(count);
 	}
 	
-	private class MuseumVertex {
-		private boolean isVisible;
-		int xValue;
-		int yValue;
-		public MuseumVertex(int x, int y)
-		{
-			xValue = x;
-			yValue = y;
-			
-		}
-		public void setVisibility(boolean visibility) {isVisible = visibility;}
-		public boolean getVisibility() {return isVisible;}
-		public int getX() {return xValue;}
-		public int getY() {return yValue;}
-		public void setX(int x) {xValue = x;}
-		public void setY(int y) {yValue = y;}
+	/*class MuseumVertex {
+		
 
-	}
+	}*/
 	
 //Never Used functions and ETC********************************************
 	
