@@ -71,7 +71,36 @@ public class ArtGallery extends JPanel implements ActionListener{
 		findSecureSolution(cameras);
 		//createPolygons( MuseumOutline, cameras, setX, setY);
 	}
-	
+	public ArtGallery(int[] x) throws IOException
+	{
+		//Reads file to generate the vertices
+		size = 26;
+		setX = new int[size];
+		setY = new int[size];
+		for(int i = 0; i<size; i++)
+		{
+			cameraPlacementTrackingArray[i] = x[i];
+		}
+		this.readFile();
+
+		cameras = new int[size];
+		for(int i = 0; i < cameras.length; i++)
+			cameras[i] = i+1;
+		
+		int ScalingConstant = 5;
+		for(int i = 0; i< BuildingVertices.size();i++)
+		{
+			//Scale the building to meet the screen needs
+			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
+			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
+			setY[i] = setY[i]*ScalingConstant;
+			setX[i] = setX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
+		}
+		MuseumOutline = new Polygon(setX, setY, size);
+		findSecureSolution(cameras);
+		//createPolygons( MuseumOutline, cameras, setX, setY);
+	}
 	
 	public ArtGallery() throws IOException
 	{
@@ -117,9 +146,20 @@ public int getCameraPlacement(int element)
 {
 	return cameraPlacementTrackingArray[element];
 }
+public void setCameraPlacement(int[] value)
+{
+	for(int i = 0;i<size;i++)
+	{
+		cameraPlacementTrackingArray[i] = value[i];
+	}
+}
 public int getCount()
 {
 	return count;
+}
+public void setCount(int newCount)
+{
+	count = newCount;
 }
 public int[] getSetX()
 {

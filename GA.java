@@ -58,7 +58,10 @@ public class GA extends JPanel implements ActionListener{
 		int[] parentTwo = new int[thePopulation.get(0).getCameras()];
 		int[] childOne = new int[thePopulation.get(0).getCameras()];
 		int[] childTwo = new int[thePopulation.get(0).getCameras()];
-		boolean isChildOneValid, isChildTwoValid = false;
+		boolean isChildOneValid = false, isChildTwoValid = false;
+		
+		int childOneCount = 0;
+		int childTwoCount = 0;
 		
 		int smallest = thePopulation.get(0).getCameras()+1;//Population member with the smallest number of cameras, initially set to an impossibly large value
 		int smallestFoundAt = 0;
@@ -126,6 +129,7 @@ public class GA extends JPanel implements ActionListener{
 			if(childOne[i] == 1)//if a camera is placed at this spot
 			{
 				makeSightLines(thePopulation, i);
+				childOneCount++;
 			}
 		}
 		if(isSecure())
@@ -162,6 +166,7 @@ public class GA extends JPanel implements ActionListener{
 			if(childTwo[i] == 1)//if a camera is placed at this spot
 			{
 				makeSightLines(thePopulation, i);
+				childTwoCount++;
 			}
 		}
 		if(isSecure())
@@ -199,9 +204,29 @@ public class GA extends JPanel implements ActionListener{
 				secondLargestFoundAt = i;
 			}
 		}
-
+		//child one replaces the largest
+		if(isChildOneValid == true && childOneCount<largest)
+		{
+			thePopulation.get(largestFoundAt).setCameraPlacement(childOne);
+			thePopulation.get(largestFoundAt).setCount(childOneCount);
+		}
+		//child two replaces the second largest
+		if(isChildTwoValid == true && childTwoCount<secondLargest)
+		{
+			thePopulation.get(secondLargestFoundAt).setCameraPlacement(childTwo);
+			thePopulation.get(largestFoundAt).setCount(childTwoCount);
+		}
 		
-		
+		for(int i = 0; i<populationSize; i++)
+		{
+			System.out.print("Population Member #"+i+":");
+			for(int j = 0; j<26; j++)
+			{
+				System.out.print(thePopulation.get(i).getCameraPlacement(j));
+			}
+			System.out.print("\n");
+		}
+		System.out.println("\n");
 	}
 	public static void makeSightLines(List<ArtGallery> thePopulation, int currentCam)
 	{
@@ -257,18 +282,12 @@ public class GA extends JPanel implements ActionListener{
 	{
 		List<ArtGallery> thePopulation = makeInitialPopulation();
 		List<JFrame> windows = new ArrayList<JFrame>();
-		for(int i = 0; i<populationSize; i++)
+		
+		for(int i = 0; i<10;i++)
 		{
-			System.out.print("Population Member #"+i+":");
-			for(int j = 0; j<26; j++)
-			{
-				System.out.print(thePopulation.get(i).getCameraPlacement(j));
-			}
-			System.out.print("\n");
-		}
-		System.out.println("\n");
 		NaturalSelection(thePopulation);
-		for(int i = 0; i<populationSize; i++)
+		}
+		/*for(int i = 0; i<populationSize; i++)
 		{
 			System.out.print("\n");
 			windows.add(new JFrame());
@@ -277,7 +296,7 @@ public class GA extends JPanel implements ActionListener{
 			windows.get(i).setTitle("Art Gallery");
 			windows.get(i).setSize(1000, 1000);
 			windows.get(i).setVisible(true);
-		}
+		}*/
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
