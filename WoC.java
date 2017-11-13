@@ -176,6 +176,7 @@ public class WoC extends JPanel implements ActionListener{
 	
 	public static void main(String[] args) throws IOException
 	{
+		long startTime = System.currentTimeMillis();
 		WoC woc = new WoC();
 		colors.add(Color.BLUE);
 		colors.add(Color.RED);
@@ -197,6 +198,9 @@ public class WoC extends JPanel implements ActionListener{
 		//mainWindow.setBackground(Color.WHITE);
 		mainWindow.setSize(1000, 1000);
 		mainWindow.setVisible(true);
+		long endTime = System.currentTimeMillis();
+		double elapsedSeconds = (endTime - startTime)/ 1000.0;
+		System.out.print("\nTime taken in ms: "+elapsedSeconds+"ms");
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
