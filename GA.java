@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,11 +19,17 @@ public class GA extends JPanel implements ActionListener{
 	private static int size = 26;
 	private static ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
 	private static ArrayList<Polygon> PolygonList = new ArrayList<Polygon>();
+	static List<ArtGallery> thePopulation = new ArrayList<ArtGallery>();
 	private static int[] setofX = new int[size];
 	private static int[] setofY = new int[size];
 	private static int[] thepolyX      = new int[361];
 	private static int[] thepolyY      = new int[361];
+	Polygon MuseumOutline;
 	
+	public Polygon getMuseumOutline()
+	{
+		return MuseumOutline;
+	}
 	public void readFile() throws IOException
 	{
 		FileReader opnfile = new FileReader("Gallery.txt");
@@ -40,20 +47,20 @@ public class GA extends JPanel implements ActionListener{
 		}
 		BReader.close();
 		opnfile.close();	
+		MuseumOutline = new Polygon(setofX, setofY, size);
 	}
-	public static List<ArtGallery> makeInitialPopulation() throws IOException
+	public static void makeInitialPopulation() throws IOException
 	{
-		List<ArtGallery> population = new ArrayList<ArtGallery>(); //Creates the ArrayList that holds the entire population
+		//List<ArtGallery> population = new ArrayList<ArtGallery>(); //Creates the ArrayList that holds the entire population
 		for(int i = 0; i<populationSize;i++)
 		{
-			population.add(new ArtGallery()); //Adds an ArtGallery Object to the ArrayList
+			thePopulation.add(new ArtGallery()); //Adds an ArtGallery Object to the ArrayList
 		}
-		return population;
 		
 	}
-	public static void NaturalSelection(List<ArtGallery> thePopulation) throws IOException
+	public static void NaturalSelection() throws IOException
 	{
-		
+		Random rand = new Random();
 		int[] parentOne = new int[thePopulation.get(0).getCameras()];
 		int[] parentTwo = new int[thePopulation.get(0).getCameras()];
 		int[] childOne = new int[thePopulation.get(0).getCameras()];
@@ -101,7 +108,7 @@ public class GA extends JPanel implements ActionListener{
 		}
 		
 		//CROSSOVER FUNCTION HERE
-		Random rand = new Random();
+		
 		int randomFirstValue = rand.nextInt(thePopulation.get(0).getCameras()/2);
 		int randomSecondValue = rand.nextInt((thePopulation.get(0).getCameras()/2)+thePopulation.get(0).getCameras()/2);
 		
@@ -122,24 +129,19 @@ public class GA extends JPanel implements ActionListener{
 		{
 			System.out.print(childOne[i]);
 		}
-		
+		System.out.print("\n");
 		//creates polygons for all of child ones camera positions and checks if that solution is secure
 		for(int i = 0;i<thePopulation.get(0).getCameras();i++)
 		{
 			if(childOne[i] == 1)//if a camera is placed at this spot
 			{
-				makeSightLines(thePopulation, i);
+				makeSightLines(i);
 				childOneCount++;
 			}
 		}
 		if(isSecure())
 		{
-			System.out.print("\nChild One solution Valid\n");
 			isChildOneValid = true;
-		}
-		else
-		{
-			System.out.println("\nChild One solution is Not Valid\n");
 		}
 		PolygonList.clear();
 		
@@ -160,23 +162,20 @@ public class GA extends JPanel implements ActionListener{
 		{
 			System.out.print(childTwo[i]);
 		}
+		System.out.print("\n");
 		//creates polygons for all of child twos camera positions and checks if that solution is secure
 		for(int i = 0;i<thePopulation.get(0).getCameras();i++)
 		{
 			if(childTwo[i] == 1)//if a camera is placed at this spot
 			{
-				makeSightLines(thePopulation, i);
+				makeSightLines(i);
 				childTwoCount++;
 			}
 		}
 		if(isSecure())
 		{
-			System.out.println("\nChild Two solution Valid\n");
 			isChildTwoValid = true;
-		}
-		else
-		{
-			System.out.println("\nChild Two solution is Not Valid\n");
+			System.out.print("here");
 		}
 		PolygonList.clear();
 		
@@ -205,16 +204,16 @@ public class GA extends JPanel implements ActionListener{
 			}
 		}
 		//child one replaces the largest
-		if(isChildOneValid == true && childOneCount<largest)
+		if(childOneCount<largest)
 		{
-			thePopulation.get(largestFoundAt).setCameraPlacement(childOne);
-			thePopulation.get(largestFoundAt).setCount(childOneCount);
+			thePopulation.remove(largestFoundAt);
+			thePopulation.add(new ArtGallery(childOne));
 		}
 		//child two replaces the second largest
-		if(isChildTwoValid == true && childTwoCount<secondLargest)
+		if(childTwoCount<secondLargest)
 		{
-			thePopulation.get(secondLargestFoundAt).setCameraPlacement(childTwo);
-			thePopulation.get(largestFoundAt).setCount(childTwoCount);
+			thePopulation.remove(secondLargestFoundAt);
+			thePopulation.add(new ArtGallery(childTwo));
 		}
 		
 		for(int i = 0; i<populationSize; i++)
@@ -228,7 +227,7 @@ public class GA extends JPanel implements ActionListener{
 		}
 		System.out.println("\n");
 	}
-	public static void makeSightLines(List<ArtGallery> thePopulation, int currentCam)
+	public static void makeSightLines(int currentCam)
 	{
 		int ang = 0;
 		while(ang <=360)
@@ -278,15 +277,51 @@ public class GA extends JPanel implements ActionListener{
 			}//outer loop
 		return allCamerasVisible;
 	}//end function
-	public static void main(String[] args) throws IOException
+	public GA(int gensize) throws IOException
 	{
-		List<ArtGallery> thePopulation = makeInitialPopulation();
+		readFile();
+		makeInitialPopulation();
 		List<JFrame> windows = new ArrayList<JFrame>();
 		
-		for(int i = 0; i<10;i++)
+		for(int i = 0; i<gensize;i++)
 		{
-		NaturalSelection(thePopulation);
+			NaturalSelection();
 		}
+		for(int i = 0; i<populationSize; i++)
+		{
+			int camCount=0;
+			for(int j = 0; j<size;j++)
+			{
+				if(thePopulation.get(i).getCameraPlacement(j) == 1)
+				{
+					camCount++;
+				}
+			}
+			System.out.println(camCount);
+		}
+		
+	}
+	public int getSolution(int element)
+	{
+		int smallest = thePopulation.get(0).getCameras()+1;//Population member with the smallest number of cameras, initially set to an impossibly large value
+		int smallestFoundAt = 0;
+		
+		Polygon checker = null;//polygon to use for checking child solutions
+		
+		//find smallest count, this will be made into parent 1
+		for(int i = 0;i<thePopulation.size();i++)
+		{
+			if(thePopulation.get(i).getCount()< smallest)
+			{
+				smallest = thePopulation.get(i).getCount();
+				smallestFoundAt = i;
+			}
+		}
+		return thePopulation.get(smallestFoundAt).getCameraPlacement(element);
+	}
+	/*public static void main(String[] args) throws IOException
+	{
+		
 		/*for(int i = 0; i<populationSize; i++)
 		{
 			System.out.print("\n");
@@ -296,8 +331,8 @@ public class GA extends JPanel implements ActionListener{
 			windows.get(i).setTitle("Art Gallery");
 			windows.get(i).setSize(1000, 1000);
 			windows.get(i).setVisible(true);
-		}*/
-	}
+		}
+	}*/
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub

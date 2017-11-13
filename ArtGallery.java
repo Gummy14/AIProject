@@ -37,7 +37,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		private int[] setX = new int[size];
 		private int[] setY = new int[size];
 		private int[] cameraPlacementTrackingArray;
-		private boolean intersect = false;
+		private boolean Sec = true;
 		
 		private int count = 0;
 
@@ -77,10 +77,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 		size = 26;
 		setX = new int[size];
 		setY = new int[size];
-		for(int i = 0; i<size; i++)
-		{
-			cameraPlacementTrackingArray[i] = x[i];
-		}
+		
 		this.readFile();
 
 		cameras = new int[size];
@@ -98,7 +95,22 @@ public class ArtGallery extends JPanel implements ActionListener{
 			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
 		}
 		MuseumOutline = new Polygon(setX, setY, size);
-		findSecureSolution(cameras);
+		cameraPlacementTrackingArray = x.clone();
+		for(int i = 0; i<size;i++)
+		{
+			if(cameraPlacementTrackingArray[i] == 1)
+			{
+				createPolygon(MuseumOutline, cameraPlacementTrackingArray[i], setX, setY);
+			}
+		}
+		if(isSecure())
+		{
+			Sec = true;
+		}
+		else
+		{
+			Sec = false;
+		}
 		//createPolygons( MuseumOutline, cameras, setX, setY);
 	}
 	
@@ -134,6 +146,10 @@ public class ArtGallery extends JPanel implements ActionListener{
 //******************
 //Setters And Getters
 //******************	
+public boolean getSec()
+{
+	return Sec;
+}
 public Polygon getMuseumOutline()
 {
 	return MuseumOutline;
@@ -145,6 +161,10 @@ public int getCameras()
 public int getCameraPlacement(int element)
 {
 	return cameraPlacementTrackingArray[element];
+}
+public int[] getCameraPlacement()
+{
+	return cameraPlacementTrackingArray;
 }
 public void setCameraPlacement(int[] value)
 {
