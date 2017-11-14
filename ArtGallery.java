@@ -14,12 +14,13 @@ import java.awt.Polygon;
 import java.util.Random;
 import java.util.Arrays;
 
-public class ArtGallery {
+public class ArtGallery extends JPanel implements ActionListener{
 
 //******************
 //Class Properties
 //******************
 		//Chosen camera 
+		private int testCamera   = 4;
 		private double distance  = 0;
 		//Size variable determines the number of vertices in the building
 		private Random rand      = new Random();
@@ -29,13 +30,16 @@ public class ArtGallery {
 		private int[] polyX      = new int[361];
 		private int[] polyY      = new int[361];
 		//This list contains all the museum building vertices
-		public ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
+		private ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
 		//This arrayList will contain all the polygons that are formed by the camera's viewpoints
 		private ArrayList<Polygon> PolygonList = new ArrayList<Polygon>();
 		private Polygon MuseumOutline;
 		private int[] setX = new int[size];
 		private int[] setY = new int[size];
-		private boolean intersect = false;
+		private int[] cameraPlacementTrackingArray;
+		private boolean Sec = true;
+		
+		private int count = 0;
 
 //******************
 //Class Constructors
@@ -46,9 +50,10 @@ public class ArtGallery {
 		size = 26;
 		setX = new int[size];
 		setY = new int[size];
+		cameraPlacementTrackingArray = new int[size];
 		this.readFile();
 
-		cameras = new int[26];
+		cameras = new int[size];
 		for(int i = 0; i < cameras.length; i++)
 			cameras[i] = i+1;
 		
@@ -60,12 +65,54 @@ public class ArtGallery {
 			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
 			setY[i] = setY[i]*ScalingConstant;
 			setX[i] = setX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
 		}
 		MuseumOutline = new Polygon(setX, setY, size);
 		findSecureSolution(cameras);
 		//createPolygons( MuseumOutline, cameras, setX, setY);
 	}
-	
+	public ArtGallery(int[] x) throws IOException
+	{
+		//Reads file to generate the vertices
+		size = 26;
+		setX = new int[size];
+		setY = new int[size];
+		
+		this.readFile();
+
+		cameras = new int[size];
+		for(int i = 0; i < cameras.length; i++)
+			cameras[i] = i+1;
+		
+		int ScalingConstant = 5;
+		for(int i = 0; i< BuildingVertices.size();i++)
+		{
+			//Scale the building to meet the screen needs
+			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
+			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
+			setY[i] = setY[i]*ScalingConstant;
+			setX[i] = setX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
+		}
+		MuseumOutline = new Polygon(setX, setY, size);
+		cameraPlacementTrackingArray = x.clone();
+		for(int i = 0; i<size;i++)
+		{
+			if(cameraPlacementTrackingArray[i] == 1)
+			{
+				createPolygon(MuseumOutline, cameraPlacementTrackingArray[i], setX, setY);
+			}
+		}
+		if(isSecure())
+		{
+			Sec = true;
+		}
+		else
+		{
+			Sec = false;
+		}
+		//createPolygons( MuseumOutline, cameras, setX, setY);
+	}
 	
 	public ArtGallery() throws IOException
 	{
@@ -74,9 +121,10 @@ public class ArtGallery {
 		size = 26;
 		setX = new int[size];
 		setY = new int[size];
+		cameraPlacementTrackingArray = new int[size];
 		this.readFile();
 
-		cameras = new int[26];
+		cameras = new int[size];
 		for(int i = 0; i < cameras.length; i++)
 			cameras[i] = i+1;
 		
@@ -88,6 +136,7 @@ public class ArtGallery {
 			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
 			setY[i] = setY[i]*ScalingConstant;
 			setX[i] = setX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
 		}
 		MuseumOutline = new Polygon(setX, setY, size);
 		findSecureSolution(cameras);
@@ -97,11 +146,53 @@ public class ArtGallery {
 //******************
 //Setters And Getters
 //******************	
-public int[] getCameras()
+public boolean getSec()
 {
-	return cameras;
+	return Sec;
 }
-
+public Polygon getMuseumOutline()
+{
+	return MuseumOutline;
+}
+public int getCameras()
+{
+	return cameras.length;
+}
+public int getCameraPlacement(int element)
+{
+	return cameraPlacementTrackingArray[element];
+}
+public int[] getCameraPlacement()
+{
+	return cameraPlacementTrackingArray;
+}
+public void setCameraPlacement(int[] value)
+{
+	for(int i = 0;i<size;i++)
+	{
+		cameraPlacementTrackingArray[i] = value[i];
+	}
+}
+public int getCount()
+{
+	return count;
+}
+public void setCount(int newCount)
+{
+	count = newCount;
+}
+public int[] getSetX()
+{
+	return setX;
+}
+public int[] getSetY()
+{
+	return setY;
+}
+public ArrayList<MuseumVertex> getBuildingVertices()
+{
+	return BuildingVertices;
+}
 //******************
 //Class Methods
 //******************
@@ -124,7 +215,7 @@ public int[] getCameras()
 		opnfile.close();	
 	}		// end readFile
 
-	public void generateMuseumLayout(int numberVertices)
+	public void GenerateMuseumLayout(int numberVertices)
 	{
 		Random rand = new Random();
 		int randX, randY;
@@ -141,7 +232,7 @@ public int[] getCameras()
 //***********************************************
 //Draws the museum polygon and all the inner polygons representing each camera's vision
 //***********************************************
-/*	public void paintComponent(Graphics g) 
+	public void paintComponent(Graphics g) 
 	{	
 		//count  = 0;
 		super.paintComponent(g);
@@ -158,7 +249,6 @@ public int[] getCameras()
 			g.drawPolygon(PolygonList.get(i));
 		
 	}
-	*/
 	public void createPolygons(Polygon polygon, int[] cameras, int[] setX, int[] SetY) {
 		
 		for(int currentCamera = 0; currentCamera < cameras.length; currentCamera++)
@@ -196,7 +286,7 @@ public int[] getCameras()
 		ArtGallery artGallery = new ArtGallery(6);
 		artGallery.isSecure();
 		JFrame mainWindow = new JFrame();
-		//mainWindow.add(artGallery);
+		mainWindow.add(artGallery);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setTitle("Art Gallery");
 		//mainWindow.setBackground(Color.WHITE);
@@ -204,10 +294,10 @@ public int[] getCameras()
 		mainWindow.setVisible(true);
 
 	}*/
-	//@Override
-	//public void actionPerformed(ActionEvent arg0) {
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub	
-	//}
+	}
 	
 //***********************************************
 //This function will parse each polygon generated by each camera's field of vision
@@ -242,50 +332,32 @@ public int[] getCameras()
 	}//end function
 
 	public void findSecureSolution(int[] cameras) {
-		List<Integer> cams = new ArrayList<Integer>();
-		for (int i = 0; i < cameras.length; i++) cams.add(cameras[i]);
-		int count = 0;
+		List<Integer> cams = new ArrayList<Integer>();//creates an array list for the cameras
+		for (int i = 0; i <cameras.length; i++) cams.add(cameras[i]);//adds the specified number cameras to the arraylist
+		count = 0;//number of added cameras starts at zero
 		while (true) {
 			Random rand = new Random();
-			if (cams.size() == 0) break;
-			int index = rand.nextInt(cams.size());
-			createPolygon(MuseumOutline, cams.get(index)-1, setX, setY);
-			cams.remove(index);
-			boolean secure = this.isSecure();
-			count++;
-			if (secure) break;
+			if (cams.size() == 0) break;//if we have no cameras, just break
+			int index = rand.nextInt(cams.size());//picks a random spot for a camera
+			//i'm sorry for this dirty fix
+			while(cameraPlacementTrackingArray[index] == 1)//if that spot is already taken, randomly pick another until we find one that isn't taken
+			{
+				index = rand.nextInt(cams.size());//picks a random spot 
+			}
+			createPolygon(MuseumOutline, cams.get(index)-1, setX, setY);//draws the polygon representing that cameras line of sight
+			//cams.remove(index); THIS LINE CAUSED MAJOR PROBLEMS WHEN TRACKING WHICH CAMERAS WHERE PLACED
+			boolean secure = this.isSecure();//checks to see if the entire museum is covered
+			count++;//adds one to the camera count
+			cameraPlacementTrackingArray[index] = 1;
+			if (secure) break;//if the museum is covered, break, otherwise loop again
 		}
-		System.out.println(count);
+		//System.out.println(count);
 	}
 	
-	public ArrayList<MuseumVertex> getVertices()
-	{
-		return this.BuildingVertices;
-	}
-	
-	
-	class MuseumVertex{
+	/*class MuseumVertex {
+		
 
-		private boolean isVisible;
-		private boolean hasCamera;
-		private int xValue;
-		private int yValue;
-		public MuseumVertex(int x, int y)
-		{
-			xValue = x;
-			yValue = y;
-			
-		}
-		public void setVisibility(boolean visibility) {isVisible = visibility;}
-		public boolean getVisibility() {return isVisible;}
-		public void    setCamera(boolean hasCamera) {hasCamera = hasCamera;}
-		public boolean getCamera() {return isVisible;}
-		public int getX() {return xValue;}
-		public int getY() {return yValue;}
-		public void setX(int x) {xValue = x;}
-		public void setY(int y) {yValue = y;}
-	}
-	
+	}*/
 	
 //Never Used functions and ETC********************************************
 	
