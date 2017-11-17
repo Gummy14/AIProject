@@ -47,7 +47,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 	public ArtGallery(int x) throws IOException
 	{
 		//Reads file to generate the vertices
-		size = 26;
+		size = 21;
 		setX = new int[size];
 		setY = new int[size];
 		cameraPlacementTrackingArray = new int[size];
@@ -74,7 +74,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 	public ArtGallery(int[] x) throws IOException
 	{
 		//Reads file to generate the vertices
-		size = 26;
+		size = 21;
 		setX = new int[size];
 		setY = new int[size];
 		
@@ -118,7 +118,7 @@ public class ArtGallery extends JPanel implements ActionListener{
 	{
 		//Reads file to generate the vertices
 		//Random rand = new 
-		size = 26;
+		size = 21;
 		setX = new int[size];
 		setY = new int[size];
 		cameraPlacementTrackingArray = new int[size];

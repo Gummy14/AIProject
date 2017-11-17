@@ -15,8 +15,8 @@ import java.util.Arrays;
 
 public class WoC extends JPanel implements ActionListener{
 	private static int crowdSize = 10;
-	private static int numberOfGenerations = 10;
-	private static int size = 26;
+	private static int numberOfGenerations = 50;
+	private static int size = 21;
 	static ArrayList<GA> Crowd = new ArrayList<GA>();
 	static Polygon MuseumOutline;
 	public static ArrayList<Color> colors = new ArrayList<Color>();
@@ -58,29 +58,22 @@ public class WoC extends JPanel implements ActionListener{
 	}
 	public static int[] compareSolutions()
 	{
-		int[] combinedSolution = new int[26];//fix later
-		int zeroCount = 0;
+		int[] combinedSolution = new int[size];
 		int oneCount = 0;
-		for(int i = 0; i<size;i++)//fix later
+		int valueInMemberSoultion = 0;
+		for(int i = 0; i<size;i++)
 		{
+			oneCount = 0;
 			for(int j = 0; j<Crowd.size();j++)
 			{
-				int valueInMemberSoultion = Crowd.get(j).getSolution(i);
-				if(valueInMemberSoultion == 0)
-				{
-					zeroCount++;
-				}
-				else if(valueInMemberSoultion == 1)
+				valueInMemberSoultion = Crowd.get(j).getSolution(i);
+				if(valueInMemberSoultion == 1)
 				{
 					oneCount++;
 				}
 				
 			}
-			if(zeroCount>oneCount)
-			{
-				combinedSolution[i] = 0;
-			}
-			else if(oneCount>zeroCount)
+			if(oneCount>((crowdSize)*.75))//If at least 3/4 of solutions have a camera here, add one too
 			{
 				combinedSolution[i] = 1;
 			}
@@ -154,17 +147,18 @@ public class WoC extends JPanel implements ActionListener{
 		}
 		MuseumOutline = new Polygon(setofX, setofY, size);
 		WoCSolution = compareSolutions();
+		//This code segment causes more problems than it fixes
 		//clean up solution
-		for(int i = 0; i<size-3;i=i+3)
+		/*for(int i = 0; i<size-3;i=i+3)
 		{
 			if(WoCSolution[i] == 1 && WoCSolution[i+3] == 1)
 			{
 				WoCSolution[i+1] = 0;
 				WoCSolution[i+2] = 0;
 			}
-		}
+		}*/
 		PolygonList.clear();
-		System.out.print("\n");
+		System.out.print("\nWoC Solution	       ");
 		for(int i = 0;i<WoCSolution.length;i++)
 		{
 			System.out.print(WoCSolution[i]);
@@ -202,7 +196,7 @@ public class WoC extends JPanel implements ActionListener{
 		mainWindow.setVisible(true);
 		long endTime = System.currentTimeMillis();
 		double elapsedSeconds = (endTime - startTime)/ 1000.0;
-		System.out.print("Time taken in ms: "+elapsedSeconds+"ms");
+		System.out.print("\nTime taken in ms: "+elapsedSeconds+"s");
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {

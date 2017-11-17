@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 public class GA extends JPanel implements ActionListener{
 	
 	static int populationSize = 10; //Number of members in the population
-	private static int size = 26;
+	private static int size = 21;
 	private static ArrayList<MuseumVertex> BuildingVertices = new ArrayList<MuseumVertex>();
 	private static ArrayList<Polygon> PolygonList = new ArrayList<Polygon>();
 	static List<ArtGallery> thePopulation = new ArrayList<ArtGallery>();
@@ -88,7 +88,7 @@ public class GA extends JPanel implements ActionListener{
 			}
 		}
 		//Make Parent 1
-		for(int j = 0; j<26; j++)
+		for(int j = 0; j<size; j++)
 		{
 			parentOne[j] = thePopulation.get(smallestFoundAt).getCameraPlacement(j);
 		}
@@ -103,7 +103,7 @@ public class GA extends JPanel implements ActionListener{
 			}
 		}
 		//Make Parent 2
-		for(int j = 0; j<26; j++)
+		for(int j = 0; j<size; j++)
 		{
 			parentTwo[j] = thePopulation.get(secondSmallestFoundAt).getCameraPlacement(j);
 		}
@@ -126,12 +126,22 @@ public class GA extends JPanel implements ActionListener{
 		{
 			childOne[i]=parentTwo[i];
 		}
-		/*for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+
+		//System.out.print("\n");		
+		//1/10 chance of mutation
+		int mutationProbablility = rand.nextInt(10);
+		if(mutationProbablility == 1)
 		{
-			System.out.print(childOne[i]);
-		}*/
-		//System.out.print("\n");
+		
+			int mutationLocation = rand.nextInt(size);
+			while(childOne[mutationLocation] != 1)
+			{
+				mutationLocation = rand.nextInt(size);
+			}
+			childOne[mutationLocation] = 0;
+		}
 		//creates polygons for all of child ones camera positions and checks if that solution is secure
+
 		for(int i = 0;i<thePopulation.get(0).getCameras();i++)
 		{
 			if(childOne[i] == 1)//if a camera is placed at this spot
@@ -140,10 +150,53 @@ public class GA extends JPanel implements ActionListener{
 				childOneCount++;
 			}
 		}
-		if(isSecure())
-		{
-			isChildOneValid = true;
-		}
+		
+			int consecutiveZeroCount1 = 0;
+			boolean threeOrMoreZeros = false;
+			for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+			{
+				if(childOne[i] == 0)
+				{
+					consecutiveZeroCount1++;
+				}
+				else if(childOne[i] == 1)
+				{
+					consecutiveZeroCount1 = 0;
+				}
+				if(consecutiveZeroCount1 == 3)
+				{
+					threeOrMoreZeros = true;
+					break;
+				}
+			}
+			if(threeOrMoreZeros = false)
+			{
+				isChildOneValid = true;
+				/*System.out.print("childOne");
+				for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+				{
+					System.out.print(childOne[i]);
+				}
+				System.out.print(" Is Secure\n");*/
+			}
+			else
+			{
+				if(isSecure())
+				{
+					isChildOneValid = true;
+					/*System.out.print("childOne");
+					for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+					{
+						System.out.print(childOne[i]);
+					}
+					System.out.print(" Is Secure\n");*/
+				}
+				else
+				{
+					//System.out.print("ChildOne Is Not Secure\n");
+				}
+			}
+			
 		PolygonList.clear();
 		
 		//generates child two
@@ -159,11 +212,21 @@ public class GA extends JPanel implements ActionListener{
 		{
 			childTwo[i]=parentOne[i];
 		}
-		/*for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+/////////////
+
+/////////////
+		
+		//1/10 chance of mutation
+		int mutationProbablility2 = rand.nextInt(10);
+		if(mutationProbablility2 == 1)
 		{
-			System.out.print(childTwo[i]);
-		}*/
-		//System.out.print("\n");
+			int mutationLocation2 = rand.nextInt(size);
+			while(childTwo[mutationLocation2] != 1)
+			{
+				mutationLocation2 = rand.nextInt(size);
+			}
+			childTwo[mutationLocation2] = 0;
+		}
 		//creates polygons for all of child twos camera positions and checks if that solution is secure
 		for(int i = 0;i<thePopulation.get(0).getCameras();i++)
 		{
@@ -173,10 +236,51 @@ public class GA extends JPanel implements ActionListener{
 				childTwoCount++;
 			}
 		}
-		if(isSecure())
+		
+		int consecutiveZeroCount = 0;
+		boolean threeOrMoreZeros2 = false;
+		for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+		{
+			if(childTwo[i] == 0)
+			{
+				consecutiveZeroCount++;
+			}
+			else if(childTwo[i] == 1)
+			{
+				consecutiveZeroCount = 0;
+			}
+			if(consecutiveZeroCount == 3)
+			{
+				threeOrMoreZeros2 = true;
+				break;
+			}
+		}
+		if(threeOrMoreZeros2 = false)
 		{
 			isChildTwoValid = true;
-			//System.out.print("here");
+			/*System.out.print("childTwo");
+			for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+			{
+				System.out.print(childTwo[i]);
+			}
+			System.out.print(" Is Secure\n");*/
+		}
+		else
+		{
+			if(isSecure())
+			{
+				/*isChildTwoValid = true;
+				System.out.print("childTwo");
+				for(int i = 0;i<thePopulation.get(0).getCameras();i++)
+				{
+					System.out.print(childTwo[i]);
+				}
+				System.out.print(" Is Secure\n");*/
+			}
+			else
+			{
+				//System.out.print("ChildTwo Is Not Secure\n");
+			}
 		}
 		PolygonList.clear();
 		
@@ -205,29 +309,30 @@ public class GA extends JPanel implements ActionListener{
 			}
 		}
 		//child one replaces the largest
-		if(childOneCount<largest)
+		if(isChildOneValid = true && childOneCount<largest)
 		{
 			thePopulation.remove(largestFoundAt);
 			thePopulation.add(new ArtGallery(childOne));
 		}
 		//child two replaces the second largest
-		if(childTwoCount<secondLargest)
+		if(isChildTwoValid = true && childTwoCount<secondLargest)
 		{
 			thePopulation.remove(secondLargestFoundAt);
 			thePopulation.add(new ArtGallery(childTwo));
 		}
-		
+/////////////
 		/*for(int i = 0; i<populationSize; i++)
 		{
 			System.out.print("Population Member #"+i+":");
-			for(int j = 0; j<26; j++)
+			for(int j = 0; j<size; j++)
 			{
-				//System.out.print(thePopulation.get(i).getCameraPlacement(j));
+				System.out.print(thePopulation.get(i).getCameraPlacement(j));
 			}
-			//System.out.print("\n");
-		}*/
-		//System.out.println("\n");
+			System.out.print("\n");
+		}
+		System.out.println("\n");*/
 	}
+/////////////
 	public static void makeSightLines(int currentCam)
 	{
 		int ang = 0;
@@ -281,6 +386,16 @@ public class GA extends JPanel implements ActionListener{
 	public GA(int gensize) throws IOException
 	{
 		readFile();
+		int ScalingConstant = 5;
+		for(int i = 0; i < BuildingVertices.size(); i++)
+		{
+			//Scale the building to meet the screen needs
+			BuildingVertices.get(i).setX(BuildingVertices.get(i).getX()*ScalingConstant);	
+			BuildingVertices.get(i).setY(BuildingVertices.get(i).getY()*ScalingConstant);	
+			setofY[i] = setofY[i]*ScalingConstant;
+			setofX[i] = setofX[i]*ScalingConstant;
+			//g.fillOval(((int)setX[i]-5)),((int)setY[i]-5), 10, 10);
+		}
 		makeInitialPopulation();
 		List<JFrame> windows = new ArrayList<JFrame>();
 		
@@ -311,13 +426,15 @@ public class GA extends JPanel implements ActionListener{
 				smallestFoundAt = i;
 			}
 		}
-		System.out.print("\nGA Solution and Count\n");
+		System.out.print("\nCrowd Member Solution: ");
 		//System.out.print(camCount+"\n");
 		for(int i = 0;i<size;i++)
 		{
 			sol[i] = thePopulation.get(smallestFoundAt).getCameraPlacement(i);
 			System.out.print(thePopulation.get(smallestFoundAt).getCameraPlacement(i));
 		}
+		//System.out.print("\n");
+		BuildingVertices.clear();
 		thePopulation.clear();
 	}
 	public int getSolution(int element)
